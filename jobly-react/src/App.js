@@ -1,23 +1,30 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import NavBar from './components/NavBar';
+import HomeRoute from './routes/HomeRoute';
+import CompaniesRoute from './routes/CompaniesRoute';
+import CompanyDetailRoute from './routes/CompanyDetailRoute';
+import JobsRoute from './routes/JobsRoute';
+import ProfileRoute from './routes/ProfileRoute';
+import AuthRoute from './routes/AuthRoute';
+
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomeRoute />} />
+        <Route path="/companies" element={<CompaniesRoute />} />
+        <Route path="/companies/:handle" element={<CompanyDetailRoute />} />
+        <Route path="/jobs" element={<JobsRoute />} />
+        <Route path="/profile" element={<ProfileRoute />} />
+        <Route path="/login" element={<AuthRoute />} />
+        <Route path="/signup" element={<AuthRoute />} />
+      </Routes>
+    </Router>>
   );
 }
 
