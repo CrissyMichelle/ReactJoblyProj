@@ -1,0 +1,6 @@
+backend/node_modules/
+jobly-react/node_modules/
+
+backend/.env
+
+.DS_Store
