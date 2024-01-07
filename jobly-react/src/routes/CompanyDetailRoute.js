@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import JoblyApi from "../api";
+import JobList from "../components/JobList";
 
 function CompanyDetailRoute() {
     const { handle } = useParams();
@@ -36,15 +37,14 @@ function CompanyDetailRoute() {
     return(
         <section>
             <h2>{company.name}</h2>
+            <img src={company.logoUrl} alt={`${company.name} logo`} />
             <p>
                 {company.description}
+                <br />
+                Number of Employees: {company.numEmployees}
             </p>
             <h3>Available Jobs</h3>
-                <ul>
-                    {company.jobs.map((job, index) => (
-                        <li key={index}>{job.title}{job.salary}<button>Apply</button></li>
-                    ))}
-                </ul>
+            <JobList jobs={company.jobs} />
         </section>
     );
 }
