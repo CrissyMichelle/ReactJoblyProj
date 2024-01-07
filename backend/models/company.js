@@ -49,7 +49,7 @@ class Company {
    * searchFilters (all optional):
    * - minEmployees
    * - maxEmployees
-   * - name (will find case-insensitive, partial matches)
+   * - nameLike (will find case-insensitive, partial matches)
    *
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
@@ -66,8 +66,11 @@ class Company {
 
     const { minEmployees, maxEmployees, name } = searchFilters;
 
-    if (minEmployees > maxEmployees) {
-      throw new BadRequestError("Min employees cannot be greater than max");
+    // check logical consistency of min and max employees
+    if (minEmployees !== undefined && maxEmployees !== undefined) {
+      if (minEmployees > maxEmployees) {
+        throw new BadRequestError("Min employees cannot be greater than max");
+      }
     }
 
     // For each possible search term, add to whereExpressions and queryValues so
@@ -88,13 +91,14 @@ class Company {
       whereExpressions.push(`name ILIKE $${queryValues.length}`);
     }
 
+    // combine query expressions (if any) into final search and filter object
     if (whereExpressions.length > 0) {
       query += " WHERE " + whereExpressions.join(" AND ");
     }
 
-    // Finalize query and return results
-
+    // Finalize query with an order by clause
     query += " ORDER BY name";
+    // Execute query and return result
     const companiesRes = await db.query(query, queryValues);
     return companiesRes.rows;
   }
