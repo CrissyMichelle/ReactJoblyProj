@@ -8,7 +8,8 @@ function CompaniesRoute() {
     useEffect(() => {
         async function getCompanies() {
             try {
-                const companyData = await JoblyApi.getCompanies();
+                const filters = {};
+                const companyData = await JoblyApi.getCompanies(filters);
                 setCompanies(companyData);
             } catch (err) {
                 setError(err);
