@@ -7,6 +7,7 @@ import CompaniesRoute from './routes/CompaniesRoute';
 import CompanyDetailRoute from './routes/CompanyDetailRoute';
 import JobsRoute from './routes/JobsRoute';
 import ProfileRoute from './routes/ProfileRoute';
+import SignupRoute from './routes/SignupRoute';
 import AuthRoute from './routes/AuthRoute';
 
 import './App.css';
@@ -22,9 +23,9 @@ function App() {
         <Route path="/jobs" element={<JobsRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/login" element={<AuthRoute />} />
-        <Route path="/signup" element={<AuthRoute />} />
+        <Route path="/signup" element={<SignupRoute />} />
       </Routes>
-    </Router>>
+    </Router>
   );
 }
 
