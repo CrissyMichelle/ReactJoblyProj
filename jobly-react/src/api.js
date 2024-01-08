@@ -53,6 +53,16 @@ class JoblyApi {
     let res = await this.request(`jobs`);
     return res.jobs;
   }
+
+  // function to set user's login token
+  static setToken(newToken) {
+    JoblyApi.token = newToken;
+  }
+  // function to handle user authentication
+  static async authUser(formData) {
+    let res = await this.request('auth/token', formData, 'post');
+    return res.token; // directly returning the token
+  }
 }
 
 // for now, put token ("testuser" / "password" on class)
