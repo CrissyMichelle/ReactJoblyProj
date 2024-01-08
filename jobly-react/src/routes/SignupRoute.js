@@ -23,17 +23,27 @@ function SignupRoute({ signup }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        
+        // front-end validation of password length
+        if (formData.password.length < 5) {
+            setErrors(['Password must be at least 5 characters long']);
+            return;
+        }
+        
         try{
-            const { token, username } = await JoblyApi.signUpUser(formData);
+            const { token } = await JoblyApi.registerUser(formData);
             if (token) {
-                signup(token, username);
+                signup(token);
                 navigate('/profile');
             }            
         } catch (errs) {
             console.error(errs);
-            setErrors(['Signup failed']);
+            const message = errs.response?.data?.error?.message || ['Signup failed'];
+            setErrors(Array.isArray(message) ? message : [message]);
         }
     };
+
+
 
     return (
         <form className="form" onSubmit={handleSubmit}>
