@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import NavBar from './components/NavBar';
 import HomeRoute from './routes/HomeRoute';
 import CompaniesRoute from './routes/CompaniesRoute';

@@ -21,9 +21,9 @@ function AuthRoute({ login }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
-            const { token, username } = await JoblyApi.authUser(formData);
+            const { token } = await JoblyApi.authUser(formData);
             if (token) {
-                login(token, username);
+                login(token);
                 navigate('/profile');
             } else {
                 setErrors(['Login failed']);
