@@ -57,11 +57,16 @@ class JoblyApi {
   // function to set user's login token
   static setToken(newToken) {
     JoblyApi.token = newToken;
+    if (newToken) {
+      localStorage.setItem('authToken', newToken);
+    } else {
+      localStorage.removeItem('authToken')
+    }
   }
   // function to handle user authentication
   static async authUser(formData) {
     let res = await this.request('auth/token', formData, 'post');
-    return res.token; // directly returning the token
+    return { token: res.token, username: formData.username };
   }
 }
 

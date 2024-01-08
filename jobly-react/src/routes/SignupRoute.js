@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import './SignupRoute.css';
 import JoblyApi from "../api";
 
-function SignupRoute() {
+function SignupRoute({ signup }) {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -24,11 +24,14 @@ function SignupRoute() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
-            let newUser = await JoblyApi.addUser(formData);
-            navigate('/profile');
+            const { token, username } = await JoblyApi.signUpUser(formData);
+            if (token) {
+                signup(token, username);
+                navigate('/profile');
+            }            
         } catch (errs) {
             console.error(errs);
-            setErrors(errs);
+            setErrors(['Signup failed']);
         }
     };
 
