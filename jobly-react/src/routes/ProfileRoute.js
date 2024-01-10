@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import JoblyApi from "../api";
+import { AuthContext } from "../App";
 
 function ProfileRoute() {
+    const { currentUser } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const [errors, setErrors] = useState(null);
 
     useEffect(() => {
+        console.log("Current user: ", currentUser);
         async function fetchUser() {
-            try{
-                const userId = localStorage.getItem('userId');
-                const user = await JoblyApi.getUser(userId);
-                setUserData(user);
-            } catch (err) {
-                console.error(err);
-                setErrors(err);
+            if (JoblyApi.token) {
+                try{
+                    const user = await JoblyApi.getUser(currentUser);
+                    setUserData(user);
+                } catch (err) {
+                    console.error(err);
+                    setErrors(err);
+                }
             }
+            
         };
         fetchUser();
-    }, []);
+    }, [currentUser]);
 
     if (errors) return <p>Error loading profile.</p>;
     if (!userData) return <p>Loading profile... ...</p>;
