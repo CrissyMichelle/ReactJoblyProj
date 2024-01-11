@@ -67,7 +67,7 @@ function App() {
   return (
     <AuthContext.Provider value={{ token, setToken, currentUser, login, logout, signup }}>
       <Router>
-        <NavBar isLoggedIn={isLoggedIn} username={currentUser?.username} logout={logout} />
+        <NavBar isLoggedIn={isLoggedIn} username={currentUser} logout={logout} />
         <Routes>
           <Route path="/login" element={<AuthRoute login={login} />} />
           <Route path="/signup" element={<SignupRoute signup={signup} />} />
