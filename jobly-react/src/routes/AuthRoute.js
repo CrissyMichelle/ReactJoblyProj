@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './SignupRoute.css';
+import { useAuth } from "../components/AuthContext";
 import JoblyApi from "../api";
+import './SignupRoute.css';
 
-function AuthRoute({ login }) {
+
+function AuthRoute() {
+    const { login } = useAuth();
+
     const [formData, setFormData] = useState({
         username: '',
         password: ''
