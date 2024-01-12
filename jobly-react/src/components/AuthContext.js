@@ -1,11 +1,11 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import JoblyApi from "../api";
 
 // creating authenticaton context to manage auth state across app
 export const AuthContext = createContext();
-// use context to create protected routes that redirect
-//  unauthenticated users to login page
+// use AuthContext to provide context value to child components
+//  wraps around compos that must access the authentication context
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('authToken') || null);
   const [currentUser, setCurrentUser] = useState(localStorage.getItem('username') || '');
@@ -56,6 +56,10 @@ export const AuthProvider = ({ children }) => {
 
   const isLoggedIn = !!token; // true if token is null=false
 
+  const contextValue = {
+    token, setToken, currentUser, isLoggedIn, login, logout, signup
+  };
+
   return (
     <AuthContext.Provider value={{ token, setToken, currentUser, isLoggedIn, login, logout, signup }}>
       {children}
@@ -63,4 +67,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// useAuth is a convenient hook that gives access to the context
 export const useAuth = () => useContext(AuthContext);

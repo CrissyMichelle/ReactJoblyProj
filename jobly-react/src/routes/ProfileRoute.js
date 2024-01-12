@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import JoblyApi from "../api";
-import { AuthContext } from "../App";
+import { AuthContext } from "../components/AuthContext";
 
 function ProfileRoute() {
     const { currentUser } = useContext(AuthContext);

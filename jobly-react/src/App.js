@@ -9,24 +9,35 @@ import JobsRoute from './routes/JobsRoute';
 import ProfileRoute from './routes/ProfileRoute';
 import SignupRoute from './routes/SignupRoute';
 import AuthRoute from './routes/AuthRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 
-
 function App() { 
-  const { isLoggedIn, currentUser, logout, signup } = useAuth();
 
   return (
     <AuthProvider>
       <Router>
-        <NavBar isLoggedIn={isLoggedIn} username={currentUser} logout={logout} />
+        <NavBar  />
         <Routes>
-          <Route path="/login" element={<AuthRoute login={login} />} />
-          <Route path="/signup" element={<SignupRoute signup={signup} />} />
+          <Route path="/login" element={<AuthRoute  />} />
+          <Route path="/signup" element={<SignupRoute  />} />
           <Route path="/" element={<HomeRoute />} />
-          <Route path="/companies" element={<CompaniesRoute />} />
-          <Route path="/companies/:handle" element={<CompanyDetailRoute />} />
-          <Route path="/jobs" element={<JobsRoute />} />
+          <Route path="/companies" element={
+            <ProtectedRoute>
+              <CompaniesRoute />
+            </ProtectedRoute>
+          } />
+          <Route path="/companies/:handle" element={
+            <ProtectedRoute>
+              <CompanyDetailRoute />
+            </ProtectedRoute>
+          } />
+          <Route path="/jobs" element={
+            <ProtectedRoute>
+              <JobsRoute />
+            </ProtectedRoute>
+          } />
           <Route path="/profile" element={<ProfileRoute />} />
         </Routes>
       </Router>

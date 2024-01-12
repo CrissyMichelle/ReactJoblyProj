@@ -1,16 +1,17 @@
 import React from "react";
-import { Route, Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 // wrapper component that ensures user logs into app
-const ProtectedRoute = ({ element, ...rest }) => {
+const ProtectedRoute = ({ children }) => {
     const { isLoggedIn } = useAuth();
+    const location = useLocation();
 
     if (!isLoggedIn) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    return <Route element={element} {...rest} />;
+    return children;
 };
 
 export default ProtectedRoute;
