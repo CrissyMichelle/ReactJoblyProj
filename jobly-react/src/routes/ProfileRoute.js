@@ -6,6 +6,7 @@ function ProfileRoute() {
     const { currentUser } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const [errors, setErrors] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         console.log("Current user: ", currentUser);
@@ -24,6 +25,8 @@ function ProfileRoute() {
         fetchUser();
     }, [currentUser]);
 
+    const handleEditToggle = () => setIsEditing(!isEditing);
+
     if (errors) return <p>Error loading profile.</p>;
     if (!userData) return <p>Loading profile... ...</p>;
 
@@ -36,7 +39,13 @@ function ProfileRoute() {
                 <li>Last Name: {userData.lastName}</li>
                 <li>Email: {userData.email}</li>
             </ul>
-            <button>Edit Profile</button>
+            <button onClick={handleEditToggle}>Edit Profile</button>
+        
+            {isEditing && (
+                <div>
+                    {/* Todo: create EditProfile.js component */}
+                </div>
+            )}
         </div>
     );
 }
