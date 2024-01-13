@@ -130,9 +130,12 @@ router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, 
 router.post("/:username/jobs/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
   try {
     const jobId = +req.params.id;
-    await User.applyToJob(req.params.username, jobId);
-    return res.json({ applied: jobId });
+    const jobData = await User.applyToJob(req.params.username, jobId);
+    console.log("Job Data: ", jobData)
+    // send all the job data to frontend
+    return res.json({ applied: jobData });
   } catch (err) {
+    console.error("Error in applyToJob route: ", err);
     return next(err);
   }
 });
