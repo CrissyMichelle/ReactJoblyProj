@@ -1,18 +1,24 @@
 import React, { useState } from "react";
+import { useAuth } from "./AuthContext";
 import JoblyApi from "../api";
 
-function EditProfile({ currentUser, setUserData }) {
+function EditProfile({ userData, setUserData, setIsEditing }) {
+    const { currentUser } = useAuth();
     const [formData, setFormData] = useState({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        email: currentUser.email
+        firstName: userData.firstName || '',
+        lastName: userData.lastName || '',
+        email: userData.email || ''
     });
+    const [changedData, setChangedData] = useState({});
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Submitting form data: ", changedData);
+
         try {
-            const updateUser = await JoblyApi.updateUser(currentUser.username, formData);
-            setUserData(updateUser);
+            const updatedUser = await JoblyApi.updateUser(currentUser, formData);
+            setUserData(updatedUser);
+            setIsEditing(false);
         } catch (err) {
             console.error(err);
         }
@@ -21,6 +27,7 @@ function EditProfile({ currentUser, setUserData }) {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(f => ({...f, [name]: value }));
+        setChangedData(c => ({...c, [name]: value }));
     };
 
     return (

@@ -80,9 +80,11 @@ class JoblyApi {
 
   /** PATCH request for Edit Profile user data */ 
   static async updateUser(username, data) {
+    console.log("Sending update data to backend: ", data);
     try {
       let res = await this.request(`users/${username}`, data, 'patch');
-      return res.data;
+      console.log("Received update response: ", res);
+      return res.user;
     } catch (err) {
       console.error("API Error: ", err.response);
       let message = err.response.data.error.message;
