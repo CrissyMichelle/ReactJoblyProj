@@ -1,10 +1,15 @@
 import React from "react";
 
-function JobCard( {job }) {
+function JobCard({ job, handleApply, hasApplied }) {
     return (
         <li>
             {job.title} - Salary: {job.salary}
-            <button>Apply</button>
+            <button
+                onClick={() => handleApply(job.id)}
+                disabled={hasApplied}
+            >
+                {hasApplied? "Applied" : "Apply"}
+            </button>
         </li>
     );
 }

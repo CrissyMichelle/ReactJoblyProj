@@ -91,6 +91,19 @@ class JoblyApi {
       throw Array.isArray(message) ? message : [message];
     }
   }
+
+  /** POST request when user applies to a job */
+  static async applyToJob(username, jobId) {
+    try {
+      let res = await this.request(`users/${username}/jobs/${jobId}`, {}, 'post');
+      console.log("Applied to job: ", res);
+      return res;
+    } catch (err) {
+      console.error("Error applying to job: ", err);
+      let message = err.response?.data?.error?.message;
+      throw Array.isArray(message) ? message : [message];
+    }
+  }
 }
 
 export default JoblyApi;

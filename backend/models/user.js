@@ -139,24 +139,25 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
     
-    // join the applications and jobs tables for detailed job info
+    // use left join the applications and jobs tables for detailed job info
+    // in case a job might not have a corresponding company
     const userApplicationsRes = await db.query(
           `SELECT j.id, j.title, j.salary, j.equity, j.company_handle, c.name AS company_name
            FROM applications AS a 
            JOIN jobs AS j ON a.job_id = j.id
-           JOIN companies AS c ON j.company_handle = c.handle
+           LEFT JOIN companies AS c ON j.company_handle = c.handle
            WHERE a.username = $1`, [username]);
 
-    // map results to user object
+    // map results to user object, handling potential null values
     user.jobs = userApplicationsRes.rows.map(row => ({
       id: row.id,
       title: row.title,
-      salary: row.salary,
-      equity: row.equity,
+      salary: row.salary ? row.salary : "Not provided",
+      equity: row.equity ? row.equity : "None",
       companyHandle: row.company_handle,
-      companyName: row.company_name
+      companyName: row.company_name ? row.company_name : "Unknown"
     }));
-    
+
     return user;
   }
 
@@ -233,26 +234,47 @@ class User {
    **/
 
   static async applyToJob(username, jobId) {
-    const preCheck = await db.query(
-          `SELECT id
+    // check if job exists
+    const jobRes = await db.query(
+          `SELECT id, title, salary, equity, company_handle
            FROM jobs
            WHERE id = $1`, [jobId]);
-    const job = preCheck.rows[0];
+    const job = jobRes.rows[0];
 
     if (!job) throw new NotFoundError(`No job: ${jobId}`);
 
-    const preCheck2 = await db.query(
+    // check if user exists
+    const userRes = await db.query(
           `SELECT username
            FROM users
            WHERE username = $1`, [username]);
-    const user = preCheck2.rows[0];
+    const user = userRes.rows[0];
 
     if (!user) throw new NotFoundError(`No username: ${username}`);
-
+    
+    // insert job application into database
     await db.query(
           `INSERT INTO applications (job_id, username)
-           VALUES ($1, $2)`,
+           VALUES ($1, $2) ON CONFLICT (job_id, username) DO NOTHING`,
         [jobId, username]);
+
+    // fetch the company name for the job
+    const companyRes = await db.query(
+      `SELECT name AS company_name
+        FROM companies
+        WHERE handle = $1`,
+      [job.companyHandle]);
+    const company = companyRes.rows[0];
+
+    // return the detailed job data
+    return {
+      id: job.id,
+      title: job.title,
+      salary: job.salary,
+      equity: job.equity,
+      companyHandle: job.company_handle,
+      companyName: company.company_name
+    };
   }
 }
 
