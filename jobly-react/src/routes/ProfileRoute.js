@@ -35,6 +35,24 @@ function ProfileRoute() {
     if (errors) return <p>Error loading profile.</p>;
     if (!userData) return <p>Loading profile... ...</p>;
 
+    const renderJobs = () => {
+        return (
+            <div>
+                <h3>Applied-to Jobs</h3>
+                <ul>
+                    {userData.jobs.map(job => (
+                        <li key={job.id}>
+                            <strong>Title: </strong> {job.title} <br />
+                            <strong>Company: </strong> {job.companyName} <br />
+                            <strong>Salary: </strong> {job.salary ? `$${job.salary}` : "Not provided"} <br />
+                            <strong>Equity: </strong> {job.equity ? job.equity : "None"} <br />
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    };
+
     console.log("Current user data: ", userData);
     return (
         <div>
@@ -46,7 +64,7 @@ function ProfileRoute() {
                 <li>Email: {userData.email}</li>
             </ul>
             <button onClick={handleEditToggle}>Edit Profile</button>
-        
+            {userData.jobs && userData.jobs.length > 0 && renderJobs()}
             {isEditing && (
                 <div>
                     <EditProfile

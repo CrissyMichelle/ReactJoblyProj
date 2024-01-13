@@ -138,13 +138,25 @@ class User {
     const user = userRes.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
-
+    
+    // join the applications and jobs tables for detailed job info
     const userApplicationsRes = await db.query(
-          `SELECT a.job_id
-           FROM applications AS a
+          `SELECT j.id, j.title, j.salary, j.equity, j.company_handle, c.name AS company_name
+           FROM applications AS a 
+           JOIN jobs AS j ON a.job_id = j.id
+           JOIN companies AS c ON j.company_handle = c.handle
            WHERE a.username = $1`, [username]);
 
-    user.applications = userApplicationsRes.rows.map(a => a.job_id);
+    // map results to user object
+    user.jobs = userApplicationsRes.rows.map(row => ({
+      id: row.id,
+      title: row.title,
+      salary: row.salary,
+      equity: row.equity,
+      companyHandle: row.company_handle,
+      companyName: row.company_name
+    }));
+    
     return user;
   }
 
