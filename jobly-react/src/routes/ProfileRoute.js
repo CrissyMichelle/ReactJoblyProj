@@ -15,6 +15,7 @@ function ProfileRoute() {
             if (JoblyApi.token) {
                 try{
                     const user = await JoblyApi.getUser(currentUser);
+                    console.log("Fetched user data: ", user);
                     setUserData(user);
                 } catch (err) {
                     console.error(err);
@@ -26,11 +27,15 @@ function ProfileRoute() {
         fetchUser();
     }, [currentUser]);
 
-    const handleEditToggle = () => setIsEditing(!isEditing);
+    const handleEditToggle = () => {
+        console.log("Toggle edit mode: ", !isEditing);
+        setIsEditing(!isEditing);
+    }
 
     if (errors) return <p>Error loading profile.</p>;
     if (!userData) return <p>Loading profile... ...</p>;
 
+    console.log("Current user data: ", userData);
     return (
         <div>
             <h2>Profile Page</h2>
@@ -44,7 +49,11 @@ function ProfileRoute() {
         
             {isEditing && (
                 <div>
-                    <EditProfile currentUser={userData} setUserData={setUserData} />
+                    <EditProfile
+                        userData={userData}
+                        setUserData={setUserData}
+                        setIsEditing={setIsEditing}
+                    />
                 </div>
             )}
         </div>

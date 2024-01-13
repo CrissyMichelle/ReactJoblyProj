@@ -187,12 +187,15 @@ class User {
                                 last_name AS "lastName",
                                 email,
                                 is_admin AS "isAdmin"`;
+    console.log("Executing SQL query: ", querySql, values);
     const result = await db.query(querySql, [...values, username]);
+    console.log("SQL query result: ", result.rows);
     const user = result.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
     delete user.password;
+    console.log("Returning user data: ", user);
     return user;
   }
 
