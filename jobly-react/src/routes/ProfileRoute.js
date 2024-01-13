@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import JoblyApi from "../api";
 import { AuthContext } from "../components/AuthContext";
+import EditProfile from "../components/EditProfile";
 
 function ProfileRoute() {
     const { currentUser } = useContext(AuthContext);
@@ -43,7 +44,7 @@ function ProfileRoute() {
         
             {isEditing && (
                 <div>
-                    {/* Todo: create EditProfile.js component */}
+                    <EditProfile currentUser={userData} setUserData={setUserData} />
                 </div>
             )}
         </div>
